@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Shikha ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Pacifico&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="app">
+    <div id="bg-hearts"></div>
+
+    <!-- Page 1: Welcome -->
+    <section id="page-1" class="page active">
+      <div class="content card">
+        <img src="https://media.tenor.com/b9i_jF3m6a0AAAAi/dubu-bubu.gif" class="char-img" alt="bear">
+        <h1 class="title">Hey Shikha ❤️</h1>
+        <p class="subtitle">I made something special for you</p>
+        <button id="start-btn" class="btn primary-btn glow">Start the Surprise</button>
+      </div>
+    </section>
+
+    <!-- Page 2: Cake -->
+    <section id="page-2" class="page">
+      <div class="content full-screen">
+        <img src="https://media.tenor.com/W9h_hTYIu44AAAAi/dudu-bubu.gif" class="char-img top" alt="bear">
+        <h2 class="prompt">Make a wish and blow the candles 🎂</h2>
+        <div id="cake-container"></div>
+        <div class="controls">
+          <button id="blow-btn" class="btn secondary-btn">Start Blowing</button>
+          <button id="manual-blow-btn" class="btn text-btn">I can't blow (Manual)</button>
+        </div>
+        <div id="birthday-msg" class="hidden">
+          <h1 class="fancy-title">HAPPY BIRTHDAY SHIKHA 🎉</h1>
+          <p class="wish">You deserve happiness, laughter, and endless smiles.</p>
+          <p class="wish">May your year be full of dreams coming true.</p>
+          <button class="next-btn btn primary-btn" data-next="page-3">Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page 3: Game -->
+    <section id="page-3" class="page">
+      <div class="content card">
+        <img src="https://media.tenor.com/5u-eK0S52B0AAAAi/dudu-bubu.gif" class="char-img left" alt="bear">
+        <h2 class="title">Catch the Hearts ❤️</h2>
+        <div id="game-info">Score: <span id="score">0</span> / 12</div>
+        <canvas id="game-canvas"></canvas>
+        <div class="slider-container" id="slider-container" class="hidden">
+          <input type="range" id="basket-slider" min="0" max="100" value="50">
+        </div>
+        <div id="game-end" class="hidden">
+          <h3 class="message" id="game-end-msg">You caught my heart already ❤️</h3>
+          <div class="btn-group">
+            <button id="continue-game-btn" class="btn secondary-btn">Play Again</button>
+            <button class="next-btn btn primary-btn" data-next="page-4">Next Surprise</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page 4: Romantic Questions -->
+    <section id="page-4" class="page">
+      <div class="content card">
+        <img src="https://media.tenor.com/p5k0K3ZOFnQAAAAi/dubu-bubu.gif" class="char-img right" alt="bear">
+        <div id="question-container">
+          <p id="question-text" class="question">Are you ready for something special?</p>
+          <div class="btn-group" id="interactive-btns">
+            <!-- Dynamically populated buttons -->
+            <button id="opt1-btn" class="btn primary-btn">YES ❤️</button>
+            <button id="opt2-btn" class="btn danger-btn">NO 🙈</button>
+          </div>
+          <p id="response-text" class="response-msg hidden"></p>
+        </div>
+        <div id="question-final" class="hidden">
+          <h2 class="title" style="font-size: 2rem;">Final Diagnosis: ❤️ Love Detected</h2>
+          <p class="wish" style="font-size: 1.2rem; margin-bottom: 25px;">Prescription: Celebrate Shikha's Birthday 🎂
+          </p>
+          <button class="next-btn btn primary-btn glow" data-next="page-5">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Page 5: Final Message -->
+    <section id="page-5" class="page">
+      <div class="content card wide">
+        <img src="https://media.tenor.com/kHcmM-1MylgAAAAi/dudu-bubu.gif" class="char-img" alt="bear">
+        <h1 class="fancy-title">Happy Birthday Shikha 🎂</h1>
+        <div class="poetry-box">
+          <p class="poetry-line">In the quiet of the morning light,</p>
+          <p class="poetry-line">You make my darkest days so bright.</p>
+          <p class="poetry-line">With every smile and every tear,</p>
+          <p class="poetry-line">I'm grateful just to have you near.</p>
+          <p class="poetry-line">May your day be filled with joy and grace,</p>
+          <p class="poetry-line">A perfect smile upon your face.</p>
+        </div>
+        <div class="end-credits">Made with ❤️ just for you</div>
+      </div>
+    </section>
+
+    <audio id="bg-music" loop>
+      <source src="https://www.bensound.com/bensound-music/bensound-buddy.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="hb-music">
+      <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
