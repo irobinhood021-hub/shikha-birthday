@@ -471,8 +471,15 @@ function extinguishCandles() {
 }
 
 // --- Page 3: Game Logic ---
-let heartsDropped = 0;
-const MAX_HEARTS = 12;
+let baseSpeed = 2.5;
+const TARGET_HEARTS = 5;
+let consecutiveFailures = 0;
+const GAME_ITEMS = [
+  { char: '❤️', type: 'heart', color: '#ff69b4', blur: 15 },
+  { char: '🎁', type: 'trap', color: '#ff4500', blur: 8 },
+  { char: '⭐', type: 'trap', color: '#ffd700', blur: 8 },
+  { char: '🎈', type: 'trap', color: '#ff1493', blur: 8 }
+];
 
 function startGame() {
   const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
@@ -480,6 +487,7 @@ function startGame() {
   const sliderContainer = document.getElementById('slider-container');
   const slider = document.getElementById('basket-slider') as HTMLInputElement;
   const continueGameBtn = document.getElementById('continue-game-btn');
+  const nextBtn = document.querySelector('#game-end .next-btn') as HTMLButtonElement | null;
 
   if (!ctx || !slider) return;
 
@@ -487,70 +495,115 @@ function startGame() {
   canvas.height = 400;
 
   currentScore = 0;
-  heartsDropped = 0;
+  baseSpeed = 2.5;
   gameActive = true;
   slider.value = '50';
   document.getElementById('score')!.innerText = '0';
   document.getElementById('game-end')?.classList.add('hidden');
+
+  if (nextBtn) nextBtn.classList.add('hidden');
+  if (continueGameBtn) continueGameBtn.classList.remove('hidden');
+
   sliderContainer?.classList.remove('hidden');
 
   let basketX = 175;
   const basketWidth = 60;
-  const hearts: any[] = [];
+  const items: any[] = [];
+
+  const endGame = (isWin: boolean) => {
+    gameActive = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const endMsg = document.getElementById('game-end-msg');
+
+    if (isWin) {
+      consecutiveFailures = 0;
+      if (endMsg) endMsg.innerText = "🎉 You collected all the hearts! Happy Birthday Shikha ❤️";
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+      if (nextBtn) nextBtn.classList.remove('hidden');
+      if (continueGameBtn) continueGameBtn.classList.add('hidden');
+    } else {
+      consecutiveFailures++;
+      if (endMsg) endMsg.innerText = "💔 Oops! You caught the wrong item. Game Over.";
+
+      if (consecutiveFailures >= 3) {
+        if (nextBtn) nextBtn.classList.remove('hidden');
+      } else {
+        if (nextBtn) nextBtn.classList.add('hidden');
+      }
+
+      if (continueGameBtn) continueGameBtn.classList.remove('hidden');
+    }
+
+    document.getElementById('game-end')?.classList.remove('hidden');
+    sliderContainer?.classList.add('hidden');
+  };
 
   const update = () => {
     if (!gameActive) return;
 
-    if (heartsDropped < MAX_HEARTS && Math.random() < 0.04) {
-      hearts.push({ x: Math.random() * (canvas.width - 20), y: -20, size: 25 });
-      heartsDropped++;
+    baseSpeed += 0.001;
+
+    if (Math.random() < 0.035 + (baseSpeed * 0.002)) {
+      const isHeart = Math.random() < 0.4;
+      const itemDef = isHeart ? GAME_ITEMS[0] : GAME_ITEMS[Math.floor(Math.random() * (GAME_ITEMS.length - 1)) + 1];
+      items.push({
+        x: Math.random() * (canvas.width - 25),
+        y: -30,
+        size: 25,
+        char: itemDef.char,
+        type: itemDef.type,
+        color: itemDef.color,
+        blur: itemDef.blur,
+        speed: baseSpeed + (Math.random() * 1.5)
+      });
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Update Basket X from slider
-    // Map slider value (0-100) to Canvas Width (0 - max allowable x)
     const maxX = canvas.width - basketWidth;
     basketX = (parseInt(slider.value) / 100) * maxX;
 
-    // Draw Basket (Simplified Bear Foot/Hand)
+    ctx.shadowBlur = 0;
     ctx.fillStyle = '#ffb6c1';
     ctx.beginPath();
     ctx.roundRect(basketX, canvas.height - 40, basketWidth, 30, 10);
     ctx.fill();
 
-    // Update & Draw Hearts
-    for (let i = hearts.length - 1; i >= 0; i--) {
-      const h = hearts[i];
-      h.y += 3.5;
+    for (let i = items.length - 1; i >= 0; i--) {
+      const item = items[i];
+      item.y += item.speed;
 
-      if (h.y + h.size > canvas.height - 40 && h.x + h.size > basketX && h.x < basketX + basketWidth) {
-        currentScore++;
-        document.getElementById('score')!.innerText = currentScore.toString();
-        confetti({ particleCount: 10, spread: 20, origin: { x: (basketX + 30) / 400, y: 0.9 } });
-        hearts.splice(i, 1);
+      if (item.y + item.size > canvas.height - 40 && item.x + item.size > basketX && item.x < basketX + basketWidth) {
+        if (item.type === 'heart') {
+          currentScore++;
+          document.getElementById('score')!.innerText = currentScore.toString();
+          confetti({ particleCount: 15, spread: 30, origin: { x: (basketX + 30) / 400, y: 0.9 } });
+          items.splice(i, 1);
+
+          if (currentScore >= TARGET_HEARTS) {
+            endGame(true);
+            return;
+          }
+        } else {
+          endGame(false);
+          return;
+        }
         continue;
       }
 
-      if (h.y > canvas.height) {
-        hearts.splice(i, 1);
+      if (item.y > canvas.height) {
+        items.splice(i, 1);
         continue;
       }
 
       ctx.font = '25px Arial';
-      ctx.fillText('❤️', h.x, h.y);
+      ctx.shadowBlur = item.blur;
+      ctx.shadowColor = item.color;
+      ctx.fillText(item.char, item.x, item.y);
+      ctx.shadowBlur = 0;
     }
 
-    // Check Win/End condition
-    if (heartsDropped >= MAX_HEARTS && hearts.length === 0) {
-      gameActive = false;
-      const endMsg = document.getElementById('game-end-msg');
-      if (endMsg) {
-        endMsg.innerText = currentScore >= 8 ? "You caught my heart! ❤️" : "Nice try! Play again? 😊";
-      }
-      document.getElementById('game-end')?.classList.remove('hidden');
-      sliderContainer?.classList.add('hidden');
-    } else {
+    if (gameActive) {
       requestAnimationFrame(update);
     }
   };
