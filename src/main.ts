@@ -214,6 +214,15 @@ function setupTargetPage(targetId: string) {
   targetPage.classList.add('active');
   gsap.fromTo(targetPage, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 });
 
+  if (targetId === 'page-5') {
+    if (hbMusic) {
+      hbMusic.currentTime = 0;
+      hbMusic.play().catch(e => console.log("HB Music blocked", e));
+    }
+  } else {
+    if (hbMusic) hbMusic.pause();
+  }
+
   // Page Specific Init
   if (targetId === 'page-2') initCake();
   if (targetId === 'page-3') startGame();
@@ -690,9 +699,8 @@ document.querySelectorAll('.next-btn').forEach(btn => {
 
 // --- Page 5: Final Message & Birthday Music ---
 function startFinalCelebration() {
-  // Stop background music and start Happy Birthday
+  // Stop background music
   bgMusic.pause();
-  hbMusic.play().catch(e => console.log("HB Music blocked", e));
 
   const duration = 20 * 1000;
   const animationEnd = Date.now() + duration;
