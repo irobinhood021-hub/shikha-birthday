@@ -214,7 +214,8 @@ body {
   transform: scale(1.1);
 }
 
-#game-canvas {
+#game-board {
+  position: relative;
   background: white;
   border-radius: 20px;
   width: 100%;
@@ -222,6 +223,18 @@ body {
   aspect-ratio: 1;
   margin: 20px 0;
   border: 4px solid var(--soft-pink);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#game-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .slider-container {
@@ -469,12 +482,19 @@ body {
 
 /* Shikha Image in Game */
 .shikha-img {
-  width: 100%;
-  max-width: 200px;
+  width: auto;
   height: auto;
-  border-radius: 15px;
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 12px;
   box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
-  margin: 15px auto;
   border: 4px solid var(--white);
-  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 10;
+  object-fit: contain;
 }
