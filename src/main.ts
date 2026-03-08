@@ -509,6 +509,7 @@ function startGame() {
   slider.value = '50';
   document.getElementById('score')!.innerText = '0';
   document.getElementById('game-end')?.classList.add('hidden');
+  document.getElementById('shikha-img')?.classList.add('hidden');
 
   if (nextBtn) nextBtn.classList.add('hidden');
   if (continueGameBtn) continueGameBtn.classList.remove('hidden');
@@ -530,6 +531,12 @@ function startGame() {
       confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
       if (nextBtn) nextBtn.classList.remove('hidden');
       if (continueGameBtn) continueGameBtn.classList.add('hidden');
+
+      const shikhaImg = document.getElementById('shikha-img');
+      if (shikhaImg) {
+        shikhaImg.classList.remove('hidden');
+        gsap.fromTo(shikhaImg, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)", delay: 0.2 });
+      }
     } else {
       consecutiveFailures++;
       if (endMsg) endMsg.innerText = "💔 Oops! You caught the wrong item. Game Over.";
@@ -541,6 +548,11 @@ function startGame() {
       }
 
       if (continueGameBtn) continueGameBtn.classList.remove('hidden');
+
+      const shikhaImg = document.getElementById('shikha-img');
+      if (shikhaImg) {
+        shikhaImg.classList.add('hidden');
+      }
     }
 
     document.getElementById('game-end')?.classList.remove('hidden');

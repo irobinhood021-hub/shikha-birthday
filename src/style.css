@@ -466,3 +466,15 @@ body {
   margin-top: 20px;
   animation: float 2s ease-in-out infinite;
 }
+
+/* Shikha Image in Game */
+.shikha-img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+  margin: 15px auto;
+  border: 4px solid var(--white);
+  display: block;
+}
